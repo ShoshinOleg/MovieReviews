@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">MovieReviews</string>
+    <string name="review_image">Review image</string>
+    <string name="load_error">Что-то пошло не так</string>
+    <string name="try_again">Повторить</string>
 </resources>
