@@ -1,7 +1,8 @@
-package com.shoshin.moviereviews
+package com.shoshin.moviereviews.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.shoshin.moviereviews.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
