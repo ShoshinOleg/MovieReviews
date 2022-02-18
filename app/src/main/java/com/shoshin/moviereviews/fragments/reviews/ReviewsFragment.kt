@@ -2,12 +2,15 @@ package com.shoshin.moviereviews.fragments.reviews
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.shoshin.moviereviews.R
+import com.shoshin.moviereviews.common.simpleScan
 import com.shoshin.moviereviews.databinding.ReviewListFragmentBinding
 import com.shoshin.moviereviews.fragments.reviews.recycler.adapters.DefaultLoadStateAdapter
 import com.shoshin.moviereviews.fragments.reviews.recycler.adapters.ReviewAdapter
@@ -15,6 +18,7 @@ import com.shoshin.moviereviews.fragments.reviews.recycler.holders.LoadStateHold
 import com.shoshin.moviereviews.fragments.reviews.recycler.holders.TryAgainAction
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -47,6 +51,7 @@ class ReviewsFragment: Fragment(R.layout.review_list_fragment) {
 
         observeReviews()
         observeLoadState()
+        handleListVisibility()
     }
 
     private fun setupSwipeToRefresh() {
@@ -67,5 +72,16 @@ class ReviewsFragment: Fragment(R.layout.review_list_fragment) {
                 mainLoadStateHolder.bind(state.refresh)
             }
         }
+    }
+
+    private fun handleListVisibility() = lifecycleScope.launch {
+        adapter.loadStateFlow.map { it.refresh }
+            .simpleScan(count = 3)
+            .collectLatest { (beforePrevious, previous, current) ->
+                binding.reviewsRecyclerView.isInvisible = current is LoadState.Error
+                        || previous is LoadState.Error
+                        || (beforePrevious is LoadState.Error && previous is LoadState.NotLoading
+                        && current is LoadState.Loading)
+            }
     }
 }
