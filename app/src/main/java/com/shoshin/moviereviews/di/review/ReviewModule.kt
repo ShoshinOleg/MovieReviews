@@ -6,6 +6,9 @@ import com.shoshin.data.entities.reviews_response.ReviewResponseToReviewsRemoteM
 import com.shoshin.data.entities.reviews_response.ReviewsResponse
 import com.shoshin.domain.common.Mapper
 import com.shoshin.domain.entities.Review
+import com.shoshin.domain.repositories.IApiKeyRepository
+import com.shoshin.moviereviews.repositories.ApiKeyRepository
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,4 +24,7 @@ class ReviewModule {
     @Provides
     fun provideReviewRemoteToReviewMapper(): Mapper<ReviewRemote, Review>
         = ReviewRemoteToReviewMapper()
+
+    @Provides
+    fun bindApiKeyRepository(): IApiKeyRepository = ApiKeyRepository()
 }
