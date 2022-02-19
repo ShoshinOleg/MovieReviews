@@ -16,8 +16,9 @@ class ReviewsRepository @Inject constructor(
     override fun getReviews(): Flow<PagingData<Review>> {
         return Pager(
             config = PagingConfig(
-                ReviewPagingSource.PAGE_SIZE,
-                enablePlaceholders = false
+                pageSize = ReviewPagingSource.PAGE_SIZE,
+                enablePlaceholders = false,
+                maxSize = 1000
             ),
             pagingSourceFactory = { ReviewPagingSource(reviewRemoteSource) }
         ).flow
